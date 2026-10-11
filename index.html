@@ -9,17 +9,15 @@
   body {
     min-height:100vh;
     background: linear-gradient(170deg,#fff3e6 0%,#ffe4ec 55%,#e8dcff 100%);
-    font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+    font-family:"思源黑体","Source Han Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
     display:flex; justify-content:center; padding: 18px 0 40px;
   }
   .wrap { width:92%; max-width:430px; }
   .title { text-align:center; margin: 10px 0 4px; }
-  .title h1 { font-size:24px; color:#8a5a3b; letter-spacing:3px; }
-  .title p { font-size:12px; color:#b08a6d; margin-top:4px; letter-spacing:1px; }
 
   /* 工作台 */
   .cup-zone {
-    background:#fff; border-radius:26px; padding:18px;
+    background:#ffffff; border-radius:26px; padding:18px;
     box-shadow:0 10px 26px rgba(190,120,90,.15);
     text-align:center; margin-top:14px;
   }
@@ -30,94 +28,78 @@
     background: linear-gradient(#fffdfa, #fff4e8);
     position:relative; overflow:hidden;
   }
-  .drop { position:absolute; font-size:30px; animation:dropIn .5s ease-out; cursor:default; transition:transform .2s; }
-  .drop:hover { transform:scale(1.25) rotate(10deg); }
-  @keyframes dropIn { 0%{ top:-40px; opacity:0;} 70%{opacity:1;} 100%{ opacity:1;} }
-  #cupHint { color:#d8b49a; font-size:13px; margin-top:2px; }
   .slots { display:flex; justify-content:center; gap:10px; margin:10px 0 4px; }
   .slot {
     width:52px; height:52px; border-radius:16px;
     background:#fff0e2; border:2px dashed #f0c9a8;
     display:flex; align-items:center; justify-content:center; font-size:26px;
   }
-  .slot.filled { border-style:solid; background:#ffe3cf; }
 
   .btnrow { display:flex; gap:12px; justify-content:center; margin-top:14px; }
   .bigbtn {
     border:none; border-radius:999px; padding:13px 30px; font-size:16px; font-weight:bold; letter-spacing:2px; cursor:pointer;
-    transition:transform .12s;
   }
-  .bigbtn:active { transform:scale(.93); }
-  #mix { background:linear-gradient(135deg,#ff9d6c,#ffb38a); color:#fff; box-shadow:0 6px 16px rgba(255,140,90,.4); }
-  #clear { background:#f3e4d7; color:#a5826a; }
-  .shake { animation:shake .5s; }
-  @keyframes shake { 0%,100%{transform:rotate(0);} 20%{transform:rotate(-7deg);} 40%{transform:rotate(6deg);} 60%{transform:rotate(-4deg);} 80%{transform:rotate(3deg);} }
 
   /* 结果 */
   #result {
     display:none; text-align:center; margin-top:14px;
-    background:#fff; border-radius:26px; padding:20px;
+    background:#ffffff; border-radius:26px; padding:20px;
     box-shadow:0 10px 26px rgba(190,120,90,.15);
   }
-  #resEmoji { font-size:58px; animation:bounceIn .6s; }
-  @keyframes bounceIn { 0%{transform:scale(0) rotate(-30deg);} 60%{transform:scale(1.2);} 100%{transform:scale(1) rotate(0);} }
-  #resName { font-size:21px; color:#8a5a3b; margin-top:8px; font-weight:bold; letter-spacing:2px; }
-  #resDesc { font-size:13px; color:#b08a6d; margin-top:6px; line-height:1.6; }
   #resNew { display:none; margin-top:8px; color:#ff7d9c; font-size:13px; font-weight:bold; }
-  .spark { position:fixed; pointer-events:none; z-index:99; animation:fly 1.3s ease-out forwards; font-size:20px; }
-  @keyframes fly { 0%{opacity:1; transform:translateY(0) scale(.5);} 100%{opacity:0; transform:translateY(-130px) scale(1.2) rotate(30deg);} }
 
   /* 料台 */
-  .shelf { margin-top:18px; background:#fff; border-radius:26px; padding:16px; box-shadow:0 10px 26px rgba(190,120,90,.15); }
-  .shelf h3 { font-size:14px; color:#a5826a; letter-spacing:2px; margin-bottom:12px; text-align:center; }
+  .shelf { margin-top:18px; background:#ffffff; border-radius:26px; padding:16px; box-shadow:0 10px 26px rgba(190,120,90,.15); }
   .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
   .item {
     background:#fff6ec; border:2px solid #ffe0c4; border-radius:18px;
-    padding:10px 2px 8px; text-align:center; cursor:pointer; transition:transform .12s;
+    padding:10px 2px 8px; text-align:center; cursor:pointer;
   }
-  .item:active { transform:scale(.88); }
-  .item.picked { background:#ffe0c4; border-color:#ffb38a; }
-  .item .em { font-size:28px; }
-  .item .nm { font-size:12px; color:#8a5a3b; margin-top:3px; }
-
-  .dex { margin-top:14px; text-align:center; font-size:12px; color:#b08a6d; letter-spacing:1px; }
-  .dex b { color:#ff7d9c; }
-  .foot { margin-top:16px; text-align:center; font-size:11px; color:#c9a68b; letter-spacing:1px; line-height:1.8; }
 </style>
+<base target="_blank">
 </head>
 <body>
 <div class="wrap">
   <div class="title">
-    <h1>🍧 糖水合成器</h1>
-    <p>概念原型 v0.1 · 选三样小料，摇一摇，变糖水</p>
+    <h1 style="font-size:24px;color:#8a5a3b;letter-spacing:3px;">🍧 糖水合成器</h1>
+    <p style="font-size:12px;color:#b08a6d;margin-top:4px;letter-spacing:1px;">概念原型 v0.1 · 选三样小料，摇一摇，变糖水</p>
   </div>
 
   <div class="cup-zone">
     <div id="cup"></div>
-    <div id="cupHint">点小料，加进碗里（最多三样）</div>
+    <div id="cupHint" style="color:#d8b49a;font-size:13px;margin-top:2px;">点小料，加进碗里（最多三样）</div>
     <div class="slots" id="slots">
       <div class="slot"></div><div class="slot"></div><div class="slot"></div>
     </div>
     <div class="btnrow">
-      <button class="bigbtn" id="mix">🌀 摇一摇合成</button>
-      <button class="bigbtn" id="clear">倒掉重来</button>
+      <button class="bigbtn" id="mix" style="background:linear-gradient(135deg,#ff9d6c,#ffb38a);color:#ffffff;box-shadow:0 6px 16px rgba(255,140,90,.4);">🌀 摇一摇合成</button>
+      <button class="bigbtn" id="clear" style="background:#f3e4d7;color:#a5826a;">倒掉重来</button>
     </div>
   </div>
 
   <div id="result">
-    <div id="resEmoji"></div>
-    <div id="resName"></div>
-    <div id="resDesc"></div>
+    <div id="resEmoji" style="font-size:58px;"></div>
+    <div id="resName" style="font-size:21px;color:#8a5a3b;margin-top:8px;font-weight:bold;letter-spacing:2px;"></div>
+    <div id="resDesc" style="font-size:13px;color:#b08a6d;margin-top:6px;line-height:1.6;"></div>
     <div id="resNew">✨ 新配方收录进图鉴！</div>
   </div>
 
   <div class="shelf">
-    <h3>—— 今日小料 ——</h3>
-    <div class="grid" id="grid"></div>
+    <h3 style="font-size:14px;color:#a5826a;letter-spacing:2px;margin-bottom:12px;text-align:center;">—— 今日小料 ——</h3>
+    <div class="grid" id="grid">
+      <div class="item" data-id="mango"><div class="em" style="font-size:28px;">🥭</div><div class="nm" style="font-size:12px;color:#8a5a3b;margin-top:3px;">芒果</div></div>
+      <div class="item" data-id="pomelo"><div class="em" style="font-size:28px;">🍊</div><div class="nm" style="font-size:12px;color:#8a5a3b;margin-top:3px;">西柚粒</div></div>
+      <div class="item" data-id="coconut"><div class="em" style="font-size:28px;">🥥</div><div class="nm" style="font-size:12px;color:#8a5a3b;margin-top:3px;">椰浆</div></div>
+      <div class="item" data-id="pearl"><div class="em" style="font-size:28px;">⚫</div><div class="nm" style="font-size:12px;color:#8a5a3b;margin-top:3px;">珍珠</div></div>
+      <div class="item" data-id="taro"><div class="em" style="font-size:28px;">🍡</div><div class="nm" style="font-size:12px;color:#8a5a3b;margin-top:3px;">芋圆</div></div>
+      <div class="item" data-id="redbean"><div class="em" style="font-size:28px;">🫘</div><div class="nm" style="font-size:12px;color:#8a5a3b;margin-top:3px;">红豆</div></div>
+      <div class="item" data-id="grass"><div class="em" style="font-size:28px;">🍮</div><div class="nm" style="font-size:12px;color:#8a5a3b;margin-top:3px;">仙草</div></div>
+      <div class="item" data-id="milk"><div class="em" style="font-size:28px;">🥛</div><div class="nm" style="font-size:12px;color:#8a5a3b;margin-top:3px;">牛奶</div></div>
+    </div>
   </div>
 
-  <div class="dex">配方图鉴：<b id="dexN">0</b> / <span id="dexT">0</span></div>
-  <div class="foot">创意与设计：六加一《糖水合成器》毕设<br/>技术实现：闻K白 · 素材：全体emoji（片酬0元）</div>
+  <div class="dex" style="margin-top:14px;text-align:center;font-size:12px;color:#b08a6d;letter-spacing:1px;">配方图鉴：<b id="dexN" style="color:#ff7d9c;">0</b> / <span id="dexT">0</span></div>
+  <div class="foot" style="margin-top:16px;text-align:center;font-size:11px;color:#c9a68b;letter-spacing:1px;line-height:1.8;">创意与设计：六加一《糖水合成器》毕设<br/>技术实现：闻K白 · 素材：全体emoji（片酬0元）</div>
 </div>
 
 <script>
@@ -145,13 +127,9 @@ try { dex = new Set(JSON.parse(localStorage.getItem("tangshui_dex")||"[]")); } c
 document.getElementById("dexT").textContent = RECIPES.length;
 document.getElementById("dexN").textContent = dex.size;
 
-const grid = document.getElementById("grid");
-ING.forEach(g=>{
-  const d = document.createElement("div");
-  d.className="item"; d.dataset.id=g.id;
-  d.innerHTML = `<div class="em">${g.em}</div><div class="nm">${g.nm}</div>`;
+document.querySelectorAll(".item").forEach(d=>{
+  const g = ING.find(x=>x.id===d.dataset.id);
   d.onclick = ()=>pick(g, d);
-  grid.appendChild(d);
 });
 
 function renderSlots(){
@@ -172,7 +150,7 @@ function renderCup(){
   });
 }
 function pick(g, el){
-  if(picked.find(x=>x.id===g.id)){ // 再点取消
+  if(picked.find(x=>x.id===g.id)){
     picked = picked.filter(x=>x.id!==g.id);
     el.classList.remove("picked");
   } else if(picked.length<3){
@@ -192,7 +170,6 @@ document.getElementById("clear").onclick = ()=>{
 
 document.getElementById("mix").onclick = function(){
   if(picked.length===0){ hint("碗还是空的！先加料～"); return; }
-  this.classList.remove("shake"); void this.offsetWidth; this.classList.add("shake");
   const ids = picked.map(x=>x.id).sort().join(",");
   const hit = RECIPES.find(r=>[...r.need].sort().join(",")===ids);
   setTimeout(()=>{
@@ -206,7 +183,6 @@ document.getElementById("mix").onclick = function(){
       document.getElementById("resNew").style.display = isNew?"block":"none";
       if(isNew){ dex.add(hit.nm); try{localStorage.setItem("tangshui_dex",JSON.stringify([...dex]));}catch(e){} }
       document.getElementById("dexN").textContent = dex.size;
-      burst(this);
       hint("好喝！图鉴更新："+dex.size+"/"+RECIPES.length);
     } else {
       document.getElementById("resEmoji").textContent = "🫠";
@@ -218,19 +194,6 @@ document.getElementById("mix").onclick = function(){
     res.scrollIntoView({behavior:"smooth", block:"nearest"});
   }, 500);
 };
-
-function burst(anchor){
-  const r = anchor.getBoundingClientRect();
-  const emo = ["✨","⭐","💖","🎉","🍬","💛"];
-  for(let i=0;i<10;i++){
-    const s=document.createElement("div");
-    s.className="spark"; s.textContent=emo[Math.floor(Math.random()*emo.length)];
-    s.style.left=(r.left+Math.random()*r.width)+"px";
-    s.style.top=(r.top-4)+"px";
-    document.body.appendChild(s);
-    setTimeout(()=>s.remove(),1400);
-  }
-}
 </script>
 </body>
 </html>
