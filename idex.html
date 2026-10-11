@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>糖水合成器 · 试玩版</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
+  body {
+    min-height:100vh;
+    background: linear-gradient(170deg,#fff3e6 0%,#ffe4ec 55%,#e8dcff 100%);
+    font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex; justify-content:center; padding: 18px 0 40px;
+  }
+  .wrap { width:92%; max-width:430px; }
+  .title { text-align:center; margin: 10px 0 4px; }
+  .title h1 { font-size:24px; color:#8a5a3b; letter-spacing:3px; }
+  .title p { font-size:12px; color:#b08a6d; margin-top:4px; letter-spacing:1px; }
+
+  /* 工作台 */
+  .cup-zone {
+    background:#fff; border-radius:26px; padding:18px;
+    box-shadow:0 10px 26px rgba(190,120,90,.15);
+    text-align:center; margin-top:14px;
+  }
+  #cup {
+    height:150px; margin:6px auto 8px; width:210px;
+    border:4px solid #f3c1a0; border-top-width:3px;
+    border-radius:14px 14px 46px 46px;
+    background: linear-gradient(#fffdfa, #fff4e8);
+    position:relative; overflow:hidden;
+  }
+  .drop { position:absolute; font-size:30px; animation:dropIn .5s ease-out; cursor:default; transition:transform .2s; }
+  .drop:hover { transform:scale(1.25) rotate(10deg); }
+  @keyframes dropIn { 0%{ top:-40px; opacity:0;} 70%{opacity:1;} 100%{ opacity:1;} }
+  #cupHint { color:#d8b49a; font-size:13px; margin-top:2px; }
+  .slots { display:flex; justify-content:center; gap:10px; margin:10px 0 4px; }
+  .slot {
+    width:52px; height:52px; border-radius:16px;
+    background:#fff0e2; border:2px dashed #f0c9a8;
+    display:flex; align-items:center; justify-content:center; font-size:26px;
+  }
+  .slot.filled { border-style:solid; background:#ffe3cf; }
+
+  .btnrow { display:flex; gap:12px; justify-content:center; margin-top:14px; }
+  .bigbtn {
+    border:none; border-radius:999px; padding:13px 30px; font-size:16px; font-weight:bold; letter-spacing:2px; cursor:pointer;
+    transition:transform .12s;
+  }
+  .bigbtn:active { transform:scale(.93); }
+  #mix { background:linear-gradient(135deg,#ff9d6c,#ffb38a); color:#fff; box-shadow:0 6px 16px rgba(255,140,90,.4); }
+  #clear { background:#f3e4d7; color:#a5826a; }
+  .shake { animation:shake .5s; }
+  @keyframes shake { 0%,100%{transform:rotate(0);} 20%{transform:rotate(-7deg);} 40%{transform:rotate(6deg);} 60%{transform:rotate(-4deg);} 80%{transform:rotate(3deg);} }
+
+  /* 结果 */
+  #result {
+    display:none; text-align:center; margin-top:14px;
+    background:#fff; border-radius:26px; padding:20px;
+    box-shadow:0 10px 26px rgba(190,120,90,.15);
+  }
+  #resEmoji { font-size:58px; animation:bounceIn .6s; }
+  @keyframes bounceIn { 0%{transform:scale(0) rotate(-30deg);} 60%{transform:scale(1.2);} 100%{transform:scale(1) rotate(0);} }
+  #resName { font-size:21px; color:#8a5a3b; margin-top:8px; font-weight:bold; letter-spacing:2px; }
+  #resDesc { font-size:13px; color:#b08a6d; margin-top:6px; line-height:1.6; }
+  #resNew { display:none; margin-top:8px; color:#ff7d9c; font-size:13px; font-weight:bold; }
+  .spark { position:fixed; pointer-events:none; z-index:99; animation:fly 1.3s ease-out forwards; font-size:20px; }
+  @keyframes fly { 0%{opacity:1; transform:translateY(0) scale(.5);} 100%{opacity:0; transform:translateY(-130px) scale(1.2) rotate(30deg);} }
+
+  /* 料台 */
+  .shelf { margin-top:18px; background:#fff; border-radius:26px; padding:16px; box-shadow:0 10px 26px rgba(190,120,90,.15); }
+  .shelf h3 { font-size:14px; color:#a5826a; letter-spacing:2px; margin-bottom:12px; text-align:center; }
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .item {
+    background:#fff6ec; border:2px solid #ffe0c4; border-radius:18px;
+    padding:10px 2px 8px; text-align:center; cursor:pointer; transition:transform .12s;
+  }
+  .item:active { transform:scale(.88); }
+  .item.picked { background:#ffe0c4; border-color:#ffb38a; }
+  .item .em { font-size:28px; }
+  .item .nm { font-size:12px; color:#8a5a3b; margin-top:3px; }
+
+  .dex { margin-top:14px; text-align:center; font-size:12px; color:#b08a6d; letter-spacing:1px; }
+  .dex b { color:#ff7d9c; }
+  .foot { margin-top:16px; text-align:center; font-size:11px; color:#c9a68b; letter-spacing:1px; line-height:1.8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">
+    <h1>🍧 糖水合成器</h1>
+    <p>概念原型 v0.1 · 选三样小料，摇一摇，变糖水</p>
+  </div>
+
+  <div class="cup-zone">
+    <div id="cup"></div>
+    <div id="cupHint">点小料，加进碗里（最多三样）</div>
+    <div class="slots" id="slots">
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+    </div>
+    <div class="btnrow">
+      <button class="bigbtn" id="mix">🌀 摇一摇合成</button>
+      <button class="bigbtn" id="clear">倒掉重来</button>
+    </div>
+  </div>
+
+  <div id="result">
+    <div id="resEmoji"></div>
+    <div id="resName"></div>
+    <div id="resDesc"></div>
+    <div id="resNew">✨ 新配方收录进图鉴！</div>
+  </div>
+
+  <div class="shelf">
+    <h3>—— 今日小料 ——</h3>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="dex">配方图鉴：<b id="dexN">0</b> / <span id="dexT">0</span></div>
+  <div class="foot">创意与设计：六加一《糖水合成器》毕设<br/>技术实现：闻K白 · 素材：全体emoji（片酬0元）</div>
+</div>
+
+<script>
+const ING = [
+  {id:"mango", em:"🥭", nm:"芒果"},
+  {id:"pomelo", em:"🍊", nm:"西柚粒"},
+  {id:"coconut", em:"🥥", nm:"椰浆"},
+  {id:"pearl", em:"⚫", nm:"珍珠"},
+  {id:"taro", em:"🍡", nm:"芋圆"},
+  {id:"redbean", em:"🫘", nm:"红豆"},
+  {id:"grass", em:"🍮", nm:"仙草"},
+  {id:"milk", em:"🥛", nm:"牛奶"},
+];
+const RECIPES = [
+  {need:["mango","pomelo","coconut"], em:"🍹", nm:"杨枝甘露", desc:"芒果的甜、西柚的酸、椰浆的香——经典永流传。"},
+  {need:["taro","pearl","coconut"], em:"🧋", nm:"芋圆大满贯", desc:"QQ弹弹全家福，一口下去全是满足。"},
+  {need:["redbean","pearl","milk"], em:"🥛", nm:"红豆啵啵牛乳", desc:"红豆沙沙的，珍珠弹弹的，牛乳暖暖的。"},
+  {need:["grass","milk","redbean"], em:"🍮", nm:"仙草烧仙草", desc:"滑溜溜的仙草配上绵密红豆，降火又治愈。"},
+  {need:["mango","coconut"], em:"🥭", nm:"芒果椰椰", desc:"只需要两种料的极简快乐，热带风扑面而来。"},
+];
+
+let picked = [];
+let dex = new Set();
+try { dex = new Set(JSON.parse(localStorage.getItem("tangshui_dex")||"[]")); } catch(e){}
+document.getElementById("dexT").textContent = RECIPES.length;
+document.getElementById("dexN").textContent = dex.size;
+
+const grid = document.getElementById("grid");
+ING.forEach(g=>{
+  const d = document.createElement("div");
+  d.className="item"; d.dataset.id=g.id;
+  d.innerHTML = `<div class="em">${g.em}</div><div class="nm">${g.nm}</div>`;
+  d.onclick = ()=>pick(g, d);
+  grid.appendChild(d);
+});
+
+function renderSlots(){
+  document.querySelectorAll(".slot").forEach((s,i)=>{
+    s.textContent = picked[i] ? picked[i].em : "";
+    s.className = "slot" + (picked[i] ? " filled":"");
+  });
+}
+function renderCup(){
+  const cup = document.getElementById("cup");
+  cup.querySelectorAll(".drop").forEach(x=>x.remove());
+  picked.forEach((g,i)=>{
+    const s = document.createElement("span");
+    s.className="drop"; s.textContent=g.em;
+    s.style.left = (18+i*62+Math.random()*14)+"px";
+    s.style.top = (30+i*34)+"px";
+    cup.appendChild(s);
+  });
+}
+function pick(g, el){
+  if(picked.find(x=>x.id===g.id)){ // 再点取消
+    picked = picked.filter(x=>x.id!==g.id);
+    el.classList.remove("picked");
+  } else if(picked.length<3){
+    picked.push(g); el.classList.add("picked");
+  } else {
+    hint("碗满了！先倒掉一样～");
+  }
+  renderSlots(); renderCup();
+}
+function hint(t){ document.getElementById("cupHint").textContent=t; }
+
+document.getElementById("clear").onclick = ()=>{
+  picked=[]; document.querySelectorAll(".item").forEach(x=>x.classList.remove("picked"));
+  renderSlots(); renderCup(); hint("点小料，加进碗里（最多三样）");
+  document.getElementById("result").style.display="none";
+};
+
+document.getElementById("mix").onclick = function(){
+  if(picked.length===0){ hint("碗还是空的！先加料～"); return; }
+  this.classList.remove("shake"); void this.offsetWidth; this.classList.add("shake");
+  const ids = picked.map(x=>x.id).sort().join(",");
+  const hit = RECIPES.find(r=>[...r.need].sort().join(",")===ids);
+  setTimeout(()=>{
+    const res = document.getElementById("result");
+    res.style.display="block";
+    if(hit){
+      document.getElementById("resEmoji").textContent = hit.em;
+      document.getElementById("resName").textContent = "「"+hit.nm+"」合成成功！";
+      document.getElementById("resDesc").textContent = hit.desc;
+      const isNew = !dex.has(hit.nm);
+      document.getElementById("resNew").style.display = isNew?"block":"none";
+      if(isNew){ dex.add(hit.nm); try{localStorage.setItem("tangshui_dex",JSON.stringify([...dex]));}catch(e){} }
+      document.getElementById("dexN").textContent = dex.size;
+      burst(this);
+      hint("好喝！图鉴更新："+dex.size+"/"+RECIPES.length);
+    } else {
+      document.getElementById("resEmoji").textContent = "🫠";
+      document.getElementById("resName").textContent = "一碗神秘的实验品";
+      document.getElementById("resDesc").textContent = "这组合……勇敢！还没收录进配方，换个搭配试试？";
+      document.getElementById("resNew").style.display="none";
+      hint("合成失败，但是勇气可嘉。");
+    }
+    res.scrollIntoView({behavior:"smooth", block:"nearest"});
+  }, 500);
+};
+
+function burst(anchor){
+  const r = anchor.getBoundingClientRect();
+  const emo = ["✨","⭐","💖","🎉","🍬","💛"];
+  for(let i=0;i<10;i++){
+    const s=document.createElement("div");
+    s.className="spark"; s.textContent=emo[Math.floor(Math.random()*emo.length)];
+    s.style.left=(r.left+Math.random()*r.width)+"px";
+    s.style.top=(r.top-4)+"px";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1400);
+  }
+}
+</script>
+</body>
+</html>
